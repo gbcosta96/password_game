@@ -85,7 +85,7 @@ class _LobbyPageState extends State<LobbyPage> {
     if (_checkFields()) {
       CreateRoomUsecase().call(controllerRoom.text, controllerName.text).then((value) {
         if (!value) {
-          _putSnack("Error creating room!");
+          _putSnack("Room already exists!");
         } 
       });
 
@@ -98,43 +98,54 @@ class _LobbyPageState extends State<LobbyPage> {
       child: Scaffold(
         backgroundColor: AppColors.backColor,
         body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const AppText("Senha", size: 40),
-              Dimensions.sizeVer(10),
-              AppInput(controller: controllerName, prefixIcon: Icons.person, hintText: "Usuário"),
-              Dimensions.sizeVer(10),
-              AppInput(controller: controllerRoom, prefixIcon: Icons.person, hintText: "Sala"),
-              Dimensions.sizeVer(10),
-              AppButton(
-                text: "Criar",
-                onTap: _createRoom,
-              ),
-              AppButton(
-                text: "Entrar",
-                onTap: _joinRoom,
-              ),
-              SizedBox(
-                width: Dimensions.width(100),
-                child: Column(
+          child: Container(
+            padding: EdgeInsets.all(Dimensions.smallest(5)),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Dimensions.sizeVer(10),
+                const AppText("Senha", size: 40),
+                Dimensions.sizeVer(5),
+                AppInput(controller: controllerName, prefixIcon: Icons.person, hintText: "Usuário"),
+                Dimensions.sizeVer(3),
+                AppInput(controller: controllerRoom, prefixIcon: Icons.person, hintText: "Sala"),
+                Dimensions.sizeVer(3),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const AppText("Salas"),
-                    Dimensions.sizeVer(20),
-                    SizedBox(
-                      height: Dimensions.height(40),
-                      child: GridView.builder(
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4),
-                        itemCount: _rooms.length,
-                        itemBuilder: (BuildContext ctx, int index) {
-                          return RoomWidget(roomId: _rooms[index].refId);
-                        }
-                      ),
+                    AppButton(
+                      text: "Criar",
+                      onTap: _createRoom,
+                    ),
+                    Dimensions.sizeHor(5),
+                    AppButton(
+                      text: "Entrar",
+                      onTap: _joinRoom,
                     ),
                   ],
                 ),
-              ),
-            ],
+                Dimensions.sizeVer(5),
+                SizedBox(
+                  width: Dimensions.width(100),
+                  child: Column(
+                    children: [
+                      const AppText("Salas"),
+                      Dimensions.sizeVer(5),
+                      SizedBox(
+                        height: Dimensions.height(35),
+                        child: GridView.builder(
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+                          itemCount: _rooms.length,
+                          itemBuilder: (BuildContext ctx, int index) {
+                            return RoomWidget(roomId: _rooms[index].refId);
+                          }
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

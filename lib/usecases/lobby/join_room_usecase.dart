@@ -14,21 +14,22 @@ class JoinRoomUsecase {
     RoomRepository repository = RoomRepository();
     PlayerRepository playerRepository = PlayerRepository(roomId);
 
-    await repository.checkRoom(roomId).then((doc) {
-      if (!doc) {
-        return JoinErr.kRoomDoesntExists;
-      }
-      playerRepository.getPlayers().then((players) {
-        if (players.length >= 2) {
-          return JoinErr.kRoomIsFull;
-        }
-        if (players.any((player) => player.name == playerName)) {
-          return JoinErr.kNameTaken;
-        }
-        PlayerModel player = PlayerModel(name: playerName);
-        playerRepository.addPlayer(player);
-      });
-    });
+    bool hasRoom = await repository.checkRoom(roomId);
+    if (!hasRoom) {
+      return JoinErr.kRoomDoesntExists;
+    }
+
+    List<PlayerModel> players = await playerRepository.getPlayers();
+    if (players.length >= 2) {
+      return JoinErr.kRoomIsFull;
+    }
+
+    if (players.any((player) => player.name == playerName)) {
+      return JoinErr.kNameTaken;
+    }
+
+    PlayerModel player = PlayerModel(name: playerName);
+    playerRepository.addPlayer(player);
     return JoinErr.kSuccess;
   }
 }

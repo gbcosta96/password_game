@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:password_game/dimensions.dart';
+import 'package:password_game/widgets/app_button.dart';
 import 'package:password_game/widgets/app_text.dart';
 
 import '../../../const.dart';
@@ -11,11 +13,20 @@ class RoomWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
+    return Padding(
+      padding: EdgeInsets.all(Dimensions.smallest(1)),
       child: Container(
         color: AppColors.secondaryColor,
-        child: AppText(roomId, bold: true),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            AppText(roomId, bold: true),
+            Padding(
+              padding: EdgeInsets.all(Dimensions.smallest(2)),
+              child: AppButton(onTap: onTap, text: "Entrar"),
+            )
+          ],
+        ),
       ),
     );
   }

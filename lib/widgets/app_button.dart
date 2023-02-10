@@ -5,19 +5,16 @@ import 'app_text.dart';
 
 class AppButton extends StatelessWidget {
   final String text;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
   final double width;
   
-  const AppButton({ Key? key, required this.onTap, this.width = 150, required this.text}) : super(key: key);
+  const AppButton({ Key? key, this.onTap, this.width = 150, required this.text}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        onTap.call();
-      },
+      onTap: onTap,
       child: Container(
-        margin: const EdgeInsets.all(10),
         padding: const EdgeInsets.all(10),
         width: width,
         color: AppColors.mainColor,

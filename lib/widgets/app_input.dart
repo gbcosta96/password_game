@@ -18,7 +18,6 @@ class AppInput extends StatelessWidget {
           Radius.circular(50),
         ),
       ),
-      margin: EdgeInsets.only(bottom: Dimensions.height(5)),
       child: TextField(
         controller: controller,
         maxLength: 12,
@@ -29,6 +28,7 @@ class AppInput extends StatelessWidget {
           color: AppColors.backColor,
         ),
         decoration: InputDecoration(
+          counterText: "",
           contentPadding: const EdgeInsets.symmetric(vertical: 5),
           hintText: hintText,
           hintStyle: const TextStyle(
