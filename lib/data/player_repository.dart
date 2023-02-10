@@ -29,8 +29,13 @@ class PlayerRepository {
     return _playersFromSnap(playersSnapshot);
   }
 
+  Future<PlayerModel> getPlayer(String name) async {
+    DocumentSnapshot snap = await playersCollection.doc(name).get();
+    return PlayerModel.fromSnapshot(snap);
+  }
+
   Future<void> addPlayer(PlayerModel player) async {
-    await playersCollection.doc(DateTime.now().millisecondsSinceEpoch.toString())
+    await playersCollection.doc(player.name)
       .set(player.toJson());
   }
 

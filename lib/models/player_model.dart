@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PlayerModel {
   final String name;
-  final List<int>? password;
-  final List<List<int>>? guesses;
+  List<int>? password;
+  List<List<int>>? guesses;
   final String? refId;
 
   PlayerModel({required this.name, this.password, this.guesses, this.refId});

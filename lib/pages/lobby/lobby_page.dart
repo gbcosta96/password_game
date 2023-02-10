@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:password_game/data/room_repository.dart';
+import 'package:password_game/pages/game/game_page.dart';
 import 'package:password_game/pages/lobby/widget/room_widget.dart';
 
 import '../../const.dart';
@@ -74,7 +75,13 @@ class _LobbyPageState extends State<LobbyPage> {
             _putSnack("Room doesn't exists!");
             break;
           case JoinErr.kSuccess:
-            _putSnack("Success!");
+            Navigator.pushReplacement(
+              context, MaterialPageRoute(
+                builder: (context) => GamePage(
+                  roomId: controllerRoom.text, playerName: controllerName.text
+                )
+              )
+            );
             break;
         }
       });
@@ -86,7 +93,15 @@ class _LobbyPageState extends State<LobbyPage> {
       CreateRoomUsecase().call(controllerRoom.text, controllerName.text).then((value) {
         if (!value) {
           _putSnack("Room already exists!");
-        } 
+        } else {
+          Navigator.pushReplacement(
+            context, MaterialPageRoute(
+              builder: (context) => GamePage(
+                roomId: controllerRoom.text, playerName: controllerName.text
+              )
+            )
+          );
+        }
       });
 
     }
