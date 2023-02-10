@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:password_game/dimensions.dart';
 import 'package:password_game/widgets/app_text.dart';
 
+import '../../../usecases/game/set_guess_usecase.dart';
 import '../../../usecases/game/set_password_usecase.dart';
 
 class BallWidget extends StatefulWidget {
-  final int value;
+  final int? value;
   final int index;
   final SetPasswordUsecase? setPasswordUsecase;
-  const BallWidget({Key? key, this.value = -1, this.setPasswordUsecase, required this.index}) : super(key: key);
+  final SetGuessUsecase? setGuessUsecase;
+  const BallWidget({Key? key, this.value, this.setPasswordUsecase, required this.index, this.setGuessUsecase}) : super(key: key);
 
   @override
   State<BallWidget> createState() => _BallWidgetState();
@@ -21,14 +23,17 @@ class _BallWidgetState extends State<BallWidget> {
   @override
   void initState() {
     super.initState();
-    _value = widget.value;
+    _value = widget.value ?? -1;
   }
 
   void _changeColor() {
-    _value += 1;
-    _value %= _colors.length;
-    setState(() {});
-    widget.setPasswordUsecase?.setGuess(widget.index, _value);
+    if (widget.setGuessUsecase != null || widget.setPasswordUsecase != null) {
+      _value += 1;
+      _value %= _colors.length;
+      setState(() {});
+      widget.setPasswordUsecase?.setPassword(widget.index, _value);
+      widget.setGuessUsecase?.setGuess(widget.index, _value);
+    }
   }
 
   @override
@@ -36,13 +41,13 @@ class _BallWidgetState extends State<BallWidget> {
     return GestureDetector(
       onTap: _changeColor,
       child: Container(
-        width: Dimensions.smallest(10),
-        height: Dimensions.smallest(10),
+        width: Dimensions.smallest(6),
+        height: Dimensions.smallest(6),
         decoration: BoxDecoration(
           color: _value == -1 ? Colors.grey : _colors[_value],
           borderRadius: BorderRadius.circular(200),
         ),
-        child: Center(child: AppText(_value == -1 ? "?" : "", size: 72, bold: true)),
+        child: Center(child: AppText(_value == -1 ? "?" : "", size: 48, bold: true)),
       ),
     );
   }

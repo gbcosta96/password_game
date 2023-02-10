@@ -3,12 +3,14 @@ import 'package:password_game/const.dart';
 import 'package:password_game/data/player_repository.dart';
 import 'package:password_game/data/room_repository.dart';
 import 'package:password_game/dimensions.dart';
+import 'package:password_game/pages/game/widget/game_widget.dart';
+import 'package:password_game/usecases/game/set_guess_usecase.dart';
 import 'package:password_game/usecases/game/set_password_usecase.dart';
 import 'package:password_game/widgets/app_text.dart';
 
 import '../../models/player_model.dart';
 import '../../models/room_model.dart';
-import 'widget/choose_password_widget.dart';
+import 'widget/password_widget.dart';
 
 class GamePage extends StatefulWidget {
   final String roomId;
@@ -24,12 +26,14 @@ class _GamePageState extends State<GamePage> {
   RoomModel? _room;
   List<PlayerModel>? _players;
   SetPasswordUsecase? _setPasswordUsecase;
+  SetGuessUsecase? _setGuessUsecase;
 
   @override
   void initState() {
     super.initState();
     setState(() {
       _setPasswordUsecase = SetPasswordUsecase(roomId: widget.roomId, playerName: widget.playerName);
+      _setGuessUsecase = SetGuessUsecase(roomId: widget.roomId, playerName: widget.playerName);
     });
 
     RoomRepository().getRoomSnap(widget.roomId).listen((event) {
@@ -53,7 +57,7 @@ class _GamePageState extends State<GamePage> {
   }
 
   Widget _gameScreen() {
-    if (_room == null || _players == null || _setPasswordUsecase == null) {
+    if (_room == null || _players == null || _setPasswordUsecase == null || _setGuessUsecase == null) {
       return const CircularProgressIndicator();
     } else if (_players!.length <= 1) {
       return Column(
@@ -63,9 +67,16 @@ class _GamePageState extends State<GamePage> {
         ],
       );
     } else if (_myself().password == null) {
-      return ChoosePasswordWidget(
-        playerName: widget.playerName,
-        setPasswordUsecase: _setPasswordUsecase!,
+      return Column(
+        children: [
+          AppText(widget.playerName, bold: true, size: 40),
+          Dimensions.sizeVer(3),
+          AppText("Escolha a senha para ${_enemy().name} adivinhar"),
+          Dimensions.sizeVer(3),
+          PasswordWidget(
+            setPasswordUsecase: _setPasswordUsecase!,
+          ),
+        ],
       );
     } else if (_enemy().password == null) {
       return Column(
@@ -75,7 +86,7 @@ class _GamePageState extends State<GamePage> {
         ],
       );
     } else {
-      return const AppText("GAME ON");
+      return GameWidget(myself: _myself(), enemy: _enemy(), setGuessUsecase: _setGuessUsecase!);
     }
   }
 
