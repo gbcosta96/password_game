@@ -3,12 +3,12 @@ import 'package:password_game/const.dart';
 import 'package:password_game/data/player_repository.dart';
 import 'package:password_game/data/room_repository.dart';
 import 'package:password_game/dimensions.dart';
-import 'package:password_game/pages/game/widget/choose_password_widget.dart';
 import 'package:password_game/usecases/game/set_password_usecase.dart';
 import 'package:password_game/widgets/app_text.dart';
 
 import '../../models/player_model.dart';
 import '../../models/room_model.dart';
+import 'widget/choose_password_widget.dart';
 
 class GamePage extends StatefulWidget {
   final String roomId;
@@ -44,8 +44,39 @@ class _GamePageState extends State<GamePage> {
     });
   }
 
-  PlayerModel myself() {
+  PlayerModel _myself() {
     return _players!.firstWhere((element) => element.name == widget.playerName);
+  }
+
+  PlayerModel _enemy() {
+    return _players!.firstWhere((element) => element.name != widget.playerName);
+  }
+
+  Widget _gameScreen() {
+    if (_room == null || _players == null || _setPasswordUsecase == null) {
+      return const CircularProgressIndicator();
+    } else if (_players!.length <= 1) {
+      return Column(
+        children: const [
+          AppText("Aguarde um adversário..."),
+          CircularProgressIndicator(),
+        ],
+      );
+    } else if (_myself().password == null) {
+      return ChoosePasswordWidget(
+        playerName: widget.playerName,
+        setPasswordUsecase: _setPasswordUsecase!,
+      );
+    } else if (_enemy().password == null) {
+      return Column(
+        children: const [
+          AppText("Aguarde o adversário..."),
+          CircularProgressIndicator(),
+        ],
+      );
+    } else {
+      return const AppText("GAME ON");
+    }
   }
 
   @override
@@ -62,14 +93,7 @@ class _GamePageState extends State<GamePage> {
               Dimensions.sizeVer(20),
               Container(
                 child: Center(
-                  child: _room == null || _players == null || _setPasswordUsecase == null ?
-                      const CircularProgressIndicator() :
-                      myself().password == null ?
-                          ChoosePasswordWidget(
-                            playerName: widget.playerName,
-                            setPasswordUsecase: _setPasswordUsecase!,
-                          ) : 
-                          const SizedBox(),                  
+                  child: _gameScreen(),                
                 ),
               ),
             ],

@@ -15,10 +15,14 @@ class SetPasswordUsecase {
     }
   }
 
-  Future<void> submit() async {
+  Future<bool> submit() async {
+    if (_password.contains(-1)) {
+      return false;
+    }
     PlayerRepository playerRepository = PlayerRepository(roomId);
     PlayerModel player = await playerRepository.getPlayer(playerName);
     player.password = _password;
     playerRepository.updatePlayer(player);
+    return true;
   }
 }

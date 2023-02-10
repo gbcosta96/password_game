@@ -149,7 +149,7 @@ class _LobbyPageState extends State<LobbyPage> {
                       SizedBox(
                         height: Dimensions.height(35),
                         child: GridView.builder(
-                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 6),
                           itemCount: _rooms.length,
                           itemBuilder: (BuildContext ctx, int index) {
                             return RoomWidget(roomId: _rooms[index].refId);

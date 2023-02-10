@@ -17,6 +17,22 @@ class ChoosePasswordWidget extends StatefulWidget {
 }
 
 class _ChoosePasswordWidgetState extends State<ChoosePasswordWidget> {
+
+  void _putSnack(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: const Duration(seconds: 1),
+      )
+    );
+  }
+
+  void _setPassword() async {
+    if (await widget.setPasswordUsecase.submit() == false) {
+      _putSnack("Invalid password");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -41,7 +57,7 @@ class _ChoosePasswordWidgetState extends State<ChoosePasswordWidget> {
           ),
         ),
         Dimensions.sizeVer(3),
-        AppButton(text: "Enviar", onTap: () =>  widget.setPasswordUsecase.submit())
+        AppButton(text: "Enviar", onTap: _setPassword),
       ],
     );
   }
