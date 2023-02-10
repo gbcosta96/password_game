@@ -1,4 +1,4 @@
-package com.example.password_game
+package com.futurus.password_game
 
 import io.flutter.embedding.android.FlutterActivity
 

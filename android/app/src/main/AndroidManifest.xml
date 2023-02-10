@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.password_game">
+    package="com.futurus.password_game">
    <application
         android:label="password_game"
-        android:name="${applicationName}"
+        android:name="Senha vs Senha"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

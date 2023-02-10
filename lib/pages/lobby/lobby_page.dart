@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:password_game/data/room_repository.dart';
+import 'package:password_game/pages/lobby/widget/room_widget.dart';
 
 import '../../const.dart';
 import '../../dimensions.dart';
+import '../../models/room_model.dart';
 import '../../usecases/lobby/create_room_usecase.dart';
 import '../../usecases/lobby/join_room_usecase.dart';
 import '../../widgets/app_button.dart';
@@ -18,6 +21,17 @@ class LobbyPage extends StatefulWidget {
 class _LobbyPageState extends State<LobbyPage> {
   final TextEditingController controllerName = TextEditingController();
   final TextEditingController controllerRoom = TextEditingController();
+  List<RoomModel> _rooms = [];
+
+  @override
+  void initState() {
+    super.initState();
+    RoomRepository().getRoomsSnap().listen((snap) {
+      setState(() {
+        _rooms = snap.where((element) => element.hidden == false).toList();
+      });
+    });
+  }
 
   @override
   void dispose() {
@@ -46,6 +60,38 @@ class _LobbyPageState extends State<LobbyPage> {
     return false;
   }
 
+  void _joinRoom() {
+    if (_checkFields()) {
+      JoinRoomUsecase().call(controllerRoom.text, controllerName.text).then((value) {
+        switch(value) {
+          case JoinErr.kNameTaken:
+            _putSnack("Name taken!");
+            break;
+          case JoinErr.kRoomIsFull:
+            _putSnack("Room is full!");
+            break;
+          case JoinErr.kRoomDoesntExists:
+            _putSnack("Room doesn't exists!");
+            break;
+          case JoinErr.kSuccess:
+            _putSnack("Success!");
+            break;
+        }
+      });
+    }
+  }
+
+  void _createRoom() {
+    if (_checkFields()) {
+      CreateRoomUsecase().call(controllerRoom.text, controllerName.text).then((value) {
+        if (!value) {
+          _putSnack("Error creating room!");
+        } 
+      });
+
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -59,38 +105,34 @@ class _LobbyPageState extends State<LobbyPage> {
               Dimensions.sizeVer(10),
               AppInput(controller: controllerName, prefixIcon: Icons.person, hintText: "Usuário"),
               Dimensions.sizeVer(10),
-              AppInput(controller: controllerRoom, prefixIcon: Icons.person, hintText: "Sala",),
+              AppInput(controller: controllerRoom, prefixIcon: Icons.person, hintText: "Sala"),
               Dimensions.sizeVer(10),
               AppButton(
                 text: "Criar",
-                onTap: () {
-                  if (_checkFields()) {
-                    CreateRoomUsecase().call(controllerRoom.text, controllerName.text);
-                  }
-                }
+                onTap: _createRoom,
               ),
               AppButton(
                 text: "Entrar",
-                onTap: () {
-                  if (_checkFields()) {
-                    JoinRoomUsecase().call(controllerRoom.text, controllerName.text).then((value) {
-                      switch(value) {
-                        case JoinErr.kNameTaken:
-                          _putSnack("Name taken!");
-                          break;
-                        case JoinErr.kRoomIsFull:
-                          _putSnack("Room is full!");
-                          break;
-                        case JoinErr.kRoomDoesntExists:
-                          _putSnack("Room doesn't exists!");
-                          break;
-                        case JoinErr.kSuccess:
-                          _putSnack("Success!");
-                          break;
-                      }
-                    });
-                  }
-                }
+                onTap: _joinRoom,
+              ),
+              SizedBox(
+                width: Dimensions.width(100),
+                child: Column(
+                  children: [
+                    const AppText("Salas"),
+                    Dimensions.sizeVer(20),
+                    SizedBox(
+                      height: Dimensions.height(40),
+                      child: GridView.builder(
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4),
+                        itemCount: _rooms.length,
+                        itemBuilder: (BuildContext ctx, int index) {
+                          return RoomWidget(roomId: _rooms[index].refId);
+                        }
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

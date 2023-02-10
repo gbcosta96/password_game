@@ -40,6 +40,29 @@
   <script src="flutter.js" defer></script>
 </head>
 <body>
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "firebase/app";
+    import { getFirestore } from "firebase/firestore";
+
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBxckOi_mqAmq2IbCNsDtvi7Fcwei0jlJU",
+      authDomain: "password-game01.firebaseapp.com",
+      projectId: "password-game01",
+      storageBucket: "password-game01.appspot.com",
+      messagingSenderId: "921105448683",
+      appId: "1:921105448683:web:6bca045bb5e3669309c8ae"
+    };
+   
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+  </script>
   <script>
     window.addEventListener('load', function(ev) {
       // Download main.dart.js

@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "921105448683",
+    "project_id": "password-game01",
+    "storage_bucket": "password-game01.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:921105448683:android:fd2bbe3a117a92b809c8ae",
+        "android_client_info": {
+          "package_name": "com.futurus.password_game"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "921105448683-1c04l4r8mk9i9gsnbftc0s0lbgpt4vkd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.futurus.password_game",
+            "certificate_hash": "eb601c9164a1789fb6df1475858b750517245ecc"
+          }
+        },
+        {
+          "client_id": "921105448683-ng2am5tsae81jte5e74ps3ajhuetgq91.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDcnTidcagWq6xEC7b7cGk39yULwrs2TbE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "921105448683-ng2am5tsae81jte5e74ps3ajhuetgq91.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
